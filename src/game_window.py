@@ -1,72 +1,67 @@
 import pygame
 import sys
+from src.button import Button
+from src.dealer import Dealer
 
-# Initialize Pygame
-pygame.init()
+class Game:
+    def __init__(self):
+        # Initialize Pygame and set up the game window
+        pygame.init()
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption("BlackJack")
 
-# Set up the game window
-screen_width = 1200
-screen_height = 800
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("BlackJack")
+        # Colors
+        self.black = (0, 0, 0)
+        self.white = (255, 255, 255)
 
-# Colors
-black = (0, 0, 0)
-white = (255, 255, 255)
+        # Load the EB Garamond font (Ensure the path is correct)
+        font_path = 'resources/EBGaramond-Regular.ttf'
+        font_size = 30
+        self.font = pygame.font.Font(font_path, font_size)
 
-# Load the EB Garamond font (Ensure the path is correct)
-font_path = '../resources/EBG-Reg.ttf'
-font_size = 30
-font = pygame.font.Font(font_path, font_size)
+        # Create buttons
+        self.hit_button = Button(self.screen, "HIT", 20, self.screen_height - 60, 140, 40, self.font, self.black, self.white)
+        self.stand_button = Button(self.screen, "STAND", 180, self.screen_height - 60, 140, 40, self.font, self.black, self.white)
+        
+        # Initialize Dealer
+        self.dealer = Dealer()
 
-def game_window():
-    # Main game loop
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-            mouse = pygame.mouse.get_pos()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if 20 <= mouse[0] <= 160 and screen_height - 60 <= mouse[1] <= screen_height - 20:
-                    print("HIT button clicked!")
-                    # Handle HIT logic here
-                elif 180 <= mouse[0] <= 320 and screen_height - 60 <= mouse[1] <= screen_height - 20:
-                    print("STAND button clicked!")
-                    # Handle STAND logic here
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.hit_button.is_clicked(event):
+                        self.handle_hit()
+                    elif self.stand_button.is_clicked(event):
+                        self.handle_stand()
 
-        # Fill the screen with a background color
-        screen.fill(black)
+            self.update_screen()
 
-        # Draw the line across the screen to split it in two
-        pygame.draw.line(screen, white, (0, screen_height // 2), (screen_width, screen_height // 2), 2)
+        pygame.quit()
+        sys.exit()
 
-        # Draw the HIT button
-        hit_button_rect = pygame.Rect(20, screen_height - 60, 140, 40)
-        pygame.draw.rect(screen, white, hit_button_rect)
+    def handle_hit(self):
+        print("HIT button clicked!")
+        # Add dealer handing card logic here using self.dealer
 
-        # Render the text on the HIT button
-        hit_text = font.render("HIT", True, black)
-        hit_text_rect = hit_text.get_rect(center=hit_button_rect.center)
-        screen.blit(hit_text, hit_text_rect)
+    def handle_stand(self):
+        print("STAND button clicked!")
+        # Add logic for stand action here
 
-        # Draw the STAND button to the right of the HIT button
-        stand_button_rect = pygame.Rect(180, screen_height - 60, 140, 40)
-        pygame.draw.rect(screen, white, stand_button_rect)
-
-        # Render the text on the STAND button
-        stand_text = font.render("STAND", True, black)
-        stand_text_rect = stand_text.get_rect(center=stand_button_rect.center)
-        screen.blit(stand_text, stand_text_rect)
-
-        # Update the display
+    def update_screen(self):
+        self.screen.fill(self.black)
+        pygame.draw.line(self.screen, self.white, (0, self.screen_height // 2), (self.screen_width, self.screen_height // 2), 2)
+        self.hit_button.draw()
+        self.stand_button.draw()
         pygame.display.flip()
 
-    # Clean up
-    pygame.quit()
-    sys.exit()
-
 if __name__ == "__main__":
-    game_window()
+    game = Game()
+    game.run()
 
