@@ -1,15 +1,5 @@
 import random
 
-"""
-This class defines the deck, suits, and deals the cards. The primary function
-is to deal a card and keep track of what is dealt in the context of the instance called
-at whatever point in the program.
-"""
-"""
-TODO: 
-    - Define a way to return the cards that are dealt
-    - Keep track of cards, making sure they aren't reused
-"""
 class Dealer:
     def __init__(self):
         self.deck = {
@@ -18,24 +8,21 @@ class Dealer:
             "jack": 10, "queen": 10, "king": 10
         }
         self.suits = ["hearts", "clubs", "spades", "diamonds"]
-        self.dealt_cards = []  # this tracks the dealt cards
+        self.dealt_cards = {}  # Track how many times each card has been dealt
 
     def deal(self):
-        card, value = random.choice(list(self.deck.items()))  # random card and its value from deck
-        suit = random.choice(self.suits)  # random suit
-        dealt_card = (card, value, suit)
-        self.dealt_cards.append(dealt_card)
-        return dealt_card
+        while True:
+            card, value = random.choice(list(self.deck.items()))  
+            suit = random.choice(self.suits)  
+            dealt_card = (card, value, suit)
 
-"""
-This class represents a player, keeps track of the cards dealt to them,
-and calculates the total value of their hand.
-"""
-"""
-TODO:
-    - Must find a way to receive the cards dealt and then store them properly
-    - Think of how to implement this entire module including dealer, into the main game logic
-"""
+            if self.dealt_cards.get(dealt_card, 0) < 4:  
+                self.dealt_cards[dealt_card] = self.dealt_cards.get(dealt_card, 0) + 1  # Increment the dealt count
+                return dealt_card
+
+            if sum(self.dealt_cards.values()) == len(self.deck) * 4:
+                raise ValueError("No more cards to deal. The deck is empty.")
+
 class Player:
     def __init__(self):
         self.hand = []  # player's hand to store dealt cards
@@ -45,5 +32,4 @@ class Player:
 
     def show_hand(self):
         return self.hand
-
 
