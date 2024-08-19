@@ -34,7 +34,7 @@ and calculates the total value of their hand.
 """
 TODO:
     - Must find a way to receive the cards dealt and then store them properly
-    - Thinko g 
+    - Think of how to implement this entire module including dealer, into the main game logic
 """
 class Player:
     def __init__(self):
