@@ -15,14 +15,13 @@ class Round:
 
         # Initial hand to player 1
         for _ in range(2):
-            card = self.dealer.deal()
-            if card:  # Ensure card is available
-                self.player1.receive_card(card)
+            card_p1 = self.dealer.deal()
+	    card_p2 = self.dealer.deal()
 
-        # Initial hand with one card revealed for "dealer" or player 2
-        card = self.dealer.deal()
-        if card:  # Ensure card is available
-            self.player2.receive_card(card)
+            self.player1.receive_card(card_p1)
+            self.player2.receive_card(card_p2)    
+        #if card:  # Ensure card is available
+
 
 if __name__ == "__main__":
     game = Round()

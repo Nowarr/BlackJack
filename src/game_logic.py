@@ -15,8 +15,8 @@ class Dealer:
             card, value = random.choice(list(self.deck.items()))  
             suit = random.choice(self.suits)  
             dealt_card = (card, value, suit)
-
-            if self.dealt_cards.get(dealt_card, 0) < 4:  
+            deck_amount = 4
+            if self.dealt_cards.get(dealt_card, 0) < deck_amount:  
                 self.dealt_cards[dealt_card] = self.dealt_cards.get(dealt_card, 0) + 1  # Increment the dealt count
                 return dealt_card
 
@@ -33,3 +33,6 @@ class Player:
     def show_hand(self):
         return self.hand
 
+
+
+ 
