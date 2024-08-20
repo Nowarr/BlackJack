@@ -16,11 +16,11 @@ class Phil:
         self.stand = stand 
 
     def decision(self):
-        revealed_cards = self.read()
+        revealed_card, p1_cards = self.read()
+        revealed_card_value = revealed_card[0]
+        p1_hand = sum(p1_cards)
 
-        revealed_card_value = revealed_cards[0][1]
-
-        if revealed_card_value < 7:
+        if revealed_card_value <= 7 and p1_hand <= 11:
             self.hit()
         else:
             self.stand()
