@@ -70,6 +70,7 @@ class Round:
         def read():
             p1_final_hand = [item for card in self.player1.hand for item in card if isinstance(item, int)]
             return p1_final_hand
+
         def response():
 
             new_card = self.dealer.deal()
@@ -81,9 +82,9 @@ class Round:
             total_value = sum(value)
 
             # print new hand
-            print(f"Player 2's revealed hand: {new_hand} | {total_value}")
+            print(f"Player 2's hand...: {new_hand} | {total_value}")
             
-            return new_hand, total_value
+            return total_value
 
         mark = Mark(read, response)
         mark.response()

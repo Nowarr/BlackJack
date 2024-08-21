@@ -1,9 +1,7 @@
 
 """
 TODO:
-    - Provides response to phil once a decision on his end has been made and his turn is over
-    - Continues to hit until bust, win, or push
-    - 
+    - Need to compare mark's hand to phil's in cases where they push or marks hand becomes greater than phil's final hand 
 """
 
 class Mark:
@@ -12,13 +10,19 @@ class Mark:
         self.hit = hit
 
     def response(self):
-        phils_final_hand = self.read()
-
-        phils_card_value = sum(phils_final_hand)
-
-        if phils_card_value < 21:
-            self.hit()
-        else:
-            print('crikey')
-
+        mark_cards = self.read()
+        mark_hand = sum(mark_cards)
+        
+        try:
+            while mark_hand < 21:
+                mark_hand = self.hit()
+                if mark_hand > 21:
+                    print('Player 2 busts!')
+                    break
+                if mark_hand == 21:
+                    print('Player 2 wins!')
+        except Exception as e:
+            print(f"An error has occured: {e}")
+                        
+    
 
