@@ -40,6 +40,19 @@ class Phil:
         _, phil_cards = self.read()
         phil_hand = sum(phil_cards)
 
+        # RULE # 0: If Phil has a hand of 21, always stand
+        if phil_hand == 21:
+            self.stand()
+            print(f"{YELLOW}Phil stands with a hand of 21.{RESET}")
+            return
+
+        # If Phil's hand value is 11 or lower, he should keep hitting until he gets a better hand or busts
+        while phil_hand <= 11:
+            phil_hand = self.hit()
+            if phil_hand > 21:
+                print("Bust!")
+                return
+        
         # Loss set
         if phil_hand > 21:
             print("Bust!")
