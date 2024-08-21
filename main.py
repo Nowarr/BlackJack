@@ -27,7 +27,7 @@ class Round:
         value = [item for card in self.player1.hand for item in card if isinstance(item, int)]
         p1_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.player1.hand)
         print(f"Player 1's cards: {p1_cards} | {value[0] + value[1]}")
-        # player 2's cards
+        # player 2's initially revealed card
         value_p2 = [item for card in self.player2.hand for item in card if isinstance(item, int)]
         p2_first_card = self.player2.hand[0]
         p2_initial_hand = f"{p2_first_card[0]} of {p2_first_card[2]}"
@@ -36,7 +36,9 @@ class Round:
     def philsDecision(self):
 
         def read():
-            p2_revealed_card = [item for card in self.player2.hand for item in card if isinstance(item, int)]
+            # the dealers initially reveled card is read by phil
+            p2_revealed_card = self.player2.hand[0][1]
+            # phil also reads his current hand before making a decison
             p1_hand = [item for card in self.player1.hand for item in card if isinstance(item, int)]
             return p2_revealed_card, p1_hand
 
@@ -53,12 +55,12 @@ class Round:
             total_value = sum(value)
 
             # print the new hand
-            print(f"Player 1 chose to hit. New hand: {new_hand} | {value[0] + value[1] + value[2]}")
+            print(f"Player 1 chose to hit. New hand: {new_hand} | {total_value}")
             
-            return new_hand, total_value
+            return total_value
 
         def stand():
-            print("Player 1 is standing.")
+            pass
 
         phil = Phil(read, hit, stand)
         phil.decision()
