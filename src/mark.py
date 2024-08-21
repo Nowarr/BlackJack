@@ -1,7 +1,6 @@
-
 """
 TODO:
-    - Need to compare mark's hand to phil's in cases where they push or marks hand becomes greater than phil's final hand 
+    - Need to compare Mark's hand to Phil's in cases where they push or Mark's hand becomes greater than Phil's final hand.
 """
 
 class Mark:
@@ -17,12 +16,9 @@ class Mark:
             while mark_hand < 21:
                 mark_hand = self.hit()
                 if mark_hand > 21:
-                    print('Player 2 busts!')
+                    print('Mark busts!')
                     break
                 if mark_hand == 21:
-                    print('Player 2 wins!')
+                    print('Mark wins!')
         except Exception as e:
-            print(f"An error has occured: {e}")
-                        
-    
-
+            print(f"An error has occurred: {e}")

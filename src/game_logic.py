@@ -25,14 +25,10 @@ class Dealer:
 
 class Player:
     def __init__(self):
-        self.hand = []  # player's hand to store dealt cards
+        self.hand = []  # Player's hand to store dealt cards
 
     def receive_card(self, card):
         self.hand.append(card)
 
     def show_hand(self):
         return self.hand
-
-
-
- 
