@@ -3,7 +3,6 @@ from src.game_logic import Player
 from src.phil import Phil
 from src.mark import Mark
 
-
 # ANSI escape sequences for colors
 RESET = "\033[0m"
 RED = "\033[31m"
@@ -122,8 +121,8 @@ class Round:
                 break
 
 if __name__ == "__main__":
-    game = Round()
-    game.start_round()
-    game.reveal()
-    game.philsDecision()
-    game.markResponse()
+    round = Round()
+    round.start_round()
+    round.reveal()
+    round.philsDecision()
+    round.markResponse()
