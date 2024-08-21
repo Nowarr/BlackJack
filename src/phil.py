@@ -6,7 +6,7 @@ TODO:
 """
 
 import random
-from src.colors import YELLOW, RESET
+from src.colors import BLUE, YELLOW, RESET
 
 class Phil:
     def __init__(self, read, hit, stand):
@@ -50,12 +50,12 @@ class Phil:
         while phil_hand <= 11:
             phil_hand = self.hit()
             if phil_hand > 21:
-                print("Bust!")
+                print(f"{BLUE} Phil busts!{RESET}")
                 return
         
         # Loss set
         if phil_hand > 21:
-            print("Bust!")
+            print(f"{BLUE} Phil busts!{RESET}")
             return
         
         # RULE # 1: Between 12 and 16
@@ -67,7 +67,7 @@ class Phil:
                 self.stand()
                 print(f"{YELLOW}Phil stands on the basis that the dealer is likely to bust.{RESET}")
             if phil_hand > 21:
-                print("Bust!")
+                print(f"{BLUE}Phil busts!{RESET}")
             return
         
         # RULE # 2: 17 or higher
@@ -83,7 +83,7 @@ class Phil:
                     self.stand()
                     print(f"{YELLOW}Phil stands on the basis that the dealer is likely to bust.{RESET}")
                 if phil_hand > 21:
-                    print("Bust!")
+                    print(f"{BLUE}Phil busts!{RESET}")
             return
         
         # RULE # 3: Dealer has 10 or Ace
