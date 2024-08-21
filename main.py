@@ -3,6 +3,18 @@ from src.game_logic import Player
 from src.phil import Phil
 from src.mark import Mark
 
+
+# ANSI escape sequences for colors
+RESET = "\033[0m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN = "\033[36m"
+WHITE = "\033[37m"
+
+
 class Round:
     def __init__(self):
         self.dealer = Dealer()
@@ -27,13 +39,13 @@ class Round:
         # Phil's cards
         value = [item for card in self.phil.hand for item in card if isinstance(item, int)]
         phil_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.phil.hand)
-        print(f"Phil's cards: {phil_cards} | {sum(value)}")
+        print(f"{BLUE}Phil's cards{RESET}: {phil_cards} | {sum(value)}")
 
         # Mark's initially revealed card
         value_mark = [item for card in self.mark.hand for item in card if isinstance(item, int)]
         mark_first_card = self.mark.hand[0]
         mark_initial_hand = f"{mark_first_card[0]} of {mark_first_card[2]}"
-        print(f"Mark's revealed card: {mark_initial_hand} | {value_mark[0]}")
+        print(f"{RED}Mark's revealed card{RESET}: {mark_initial_hand} | {value_mark[0]}")
     
     def philsDecision(self):
         def read():
@@ -55,12 +67,12 @@ class Round:
             total_value = sum(value)
 
             # Print the new hand
-            print(f"Phil chose to hit. New hand: {new_hand} | {total_value}")
+            print(f"{BLUE}Phil{RESET} chose to hit. New hand: {new_hand} | {total_value}")
             
             return total_value
 
         def stand():
-            print("Phil stands.")
+            pass
 
         phil = Phil(read, hit, stand)
         phil.decision()
@@ -80,12 +92,32 @@ class Round:
             total_value = sum(value)
 
             # Print new hand
-            print(f"Mark's hand: {new_hand} | {total_value}")
+            print(f"{RED}Mark's hand{RESET}: {new_hand} | {total_value}")
             
             return total_value
 
         mark = Mark(read, response)
         mark.response()
+
+
+    def check_game_over(self):
+        pass
+
+    def game_loop(self):
+        while True:
+            # start game
+            self.reveal()
+ 
+            # Phil's turn
+            self.philsDecision()
+
+            # Mark's turn
+            self.markResponse()
+
+            # Game over conditions
+            if self.check_game_over():
+                print("Game Over")
+                break
 
 if __name__ == "__main__":
     game = Round()

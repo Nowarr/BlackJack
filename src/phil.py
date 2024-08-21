@@ -6,6 +6,7 @@ TODO:
 """
 
 import random
+from src.colors import YELLOW, RESET
 
 class Phil:
     def __init__(self, read, hit, stand):
@@ -19,7 +20,6 @@ class Phil:
         _, phil_cards = self.read()
         phil_hand = sum(phil_cards)
 
-        # Phil's strategy: hit if the hand is low, considering soft hands.
         if card_value == 11:
             if phil_hand + card_value > 21:
                 card_value = 1
@@ -39,16 +39,48 @@ class Phil:
     def decision(self):
         _, phil_cards = self.read()
         phil_hand = sum(phil_cards)
+
+        # Loss set
+        if phil_hand > 21:
+            print("Bust!")
+            return
         
-        try:
-            while phil_hand < 17:
+        # RULE # 1: Between 12 and 16
+        if 12 <= phil_hand <= 16:
+            if _ >= 7:
                 phil_hand = self.hit()
-                if phil_hand > 21:
-                    print('Phil busts!')
-                    break
-                elif phil_hand >= 17:
-                    print("Phil stands!")
+                print(f"{YELLOW}Phil hits on the basis that the dealer has a strong potential hand so Phil needs to improve his hand.{RESET}")
+            elif _ <= 6:
+                self.stand()
+                print(f"{YELLOW}Phil stands on the basis that the dealer is likely to bust.{RESET}")
+            if phil_hand > 21:
+                print("Bust!")
+            return
+        
+        # RULE # 2: 17 or higher
+        if phil_hand >= 17:
+            if not self.is_soft:
+                self.stand()
+                print(f"{YELLOW}Phil stands on the basis that there is little risk to win on a hard 17 or above.{RESET}")
+            elif self.is_soft:
+                if _ >= 7:
+                    phil_hand = self.hit()
+                    print(f"{YELLOW}Phil hits on the basis that a soft 17 is weaker than a strong dealer card.{RESET}")
+                elif _ <= 6:
                     self.stand()
-                    break
-        except Exception as e:
-            print(f"An error occurred: {e}")
+                    print(f"{YELLOW}Phil stands on the basis that the dealer is likely to bust.{RESET}")
+                if phil_hand > 21:
+                    print("Bust!")
+            return
+        
+        # RULE # 3: Dealer has 10 or Ace
+        if _ in (10, 11):
+            if phil_hand <= 17:
+                phil_hand = self.hit()
+                print(f"{YELLOW}Phil hits on the basis that the dealer has a strong chance of having a good hand and must retaliate.{RESET}")
+                if phil_hand > 21:
+                    print("Bust!")
+            elif phil_hand >= 18:
+                self.stand()
+                print(f"{YELLOW}Phil stands on the basis that he has a good chance of winning or pushing without risking a bust.{RESET}")
+            return
