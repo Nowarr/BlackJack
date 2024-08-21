@@ -97,3 +97,4 @@ class Phil:
                 self.stand()
                 print(f"{YELLOW}Phil stands on the basis that he has a good chance of winning or pushing without risking a bust.{RESET}")
             return
+

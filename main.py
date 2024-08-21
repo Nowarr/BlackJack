@@ -39,6 +39,7 @@ class Round:
         # Phil's cards
         value = [item for card in self.phil.hand for item in card if isinstance(item, int)]
         phil_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.phil.hand)
+        print('------------------------------------------------')
         print(f"{BLUE}Phil's cards{RESET}: {phil_cards} | {sum(value)}")
 
         # Mark's initially revealed card
@@ -46,6 +47,7 @@ class Round:
         mark_first_card = self.mark.hand[0]
         mark_initial_hand = f"{mark_first_card[0]} of {mark_first_card[2]}"
         print(f"{RED}Mark's revealed card{RESET}: {mark_initial_hand} | {value_mark[0]}")
+        print('------------------------------------------------')
     
     def philsDecision(self):
         def read():
