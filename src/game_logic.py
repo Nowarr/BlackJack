@@ -4,6 +4,7 @@ class Dealer:
     def __init__(self):
         self.deck = {
             "ace": 1 or 11, "two": 2, "three": 3, "four": 4, "five": 5,
+            "ace": 1, "two": 2, "three": 3, "four": 4, "five": 5,
             "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
             "jack": 10, "queen": 10, "king": 10
         }
@@ -23,7 +24,7 @@ class Dealer:
             if sum(self.dealt_cards.values()) == len(self.deck) * 4:
                 raise ValueError("No more cards to deal. The deck is empty.")
 
-class Player:
+class Dummy:
     def __init__(self):
         self.hand = []  # Player's hand to store dealt cards
 
@@ -32,3 +33,9 @@ class Player:
 
     def show_hand(self):
         return self.hand
+
+    def show_count(self):
+        count = 0
+        for i in range(len(self.hand)):
+            count += self.show_hand()[i][1]
+        return count
