@@ -3,6 +3,7 @@ import random
 class Dealer:
     def __init__(self):
         self.deck = {
+            "ace": 1 or 11, "two": 2, "three": 3, "four": 4, "five": 5,
             "ace": 1, "two": 2, "three": 3, "four": 4, "five": 5,
             "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
             "jack": 10, "queen": 10, "king": 10
@@ -25,7 +26,7 @@ class Dealer:
 
 class Dummy:
     def __init__(self):
-        self.hand = []  # player's hand to store dealt cards
+        self.hand = []  # Player's hand to store dealt cards
 
     def receive_card(self, card):
         self.hand.append(card)
@@ -38,6 +39,3 @@ class Dummy:
         for i in range(len(self.hand)):
             count += self.show_hand()[i][1]
         return count
-
-
- 
