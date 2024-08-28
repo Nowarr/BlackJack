@@ -1,128 +1,68 @@
-from src.game_logic import Dealer
-from src.game_logic import Dummy
-from src.phil import Phil
-from src.mark import Mark
+from src.manager import GameManager
+from src.bettor import Bettor
+from src.dummy import Dummy
 
 # ANSI escape sequences for colors
 RESET = "\033[0m"
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
 BLUE = "\033[34m"
-MAGENTA = "\033[35m"
-CYAN = "\033[36m"
-WHITE = "\033[37m"
+RED = "\033[31m"
 
 
+'''
+General Structure:
+
+    - GameManager handles the game's state. Handles status of game, hand values, game results, etc. Cards are revealed upon the start of the round
+    - Bettor is our "main player" and makes decisions based on both his current hand value as well as a set of rules hard coded into his class
+    - Dummy simply provides a final response once the bettor makes his decisions.
+    - The game then finishes and asks the user to run a new round or not.
+
+'''
 class Round:
     def __init__(self):
-        self.dealer = Dealer()
-        self.phil = Dummy()  # This is Phil
-        self.mark = Dummy()  # This is Mark
-        self.start_round()
+        self.manager = GameManager()
+        self.dummy = Dummy(self.manager)
+        self.bettor = Bettor(self.manager, self.dummy)
 
     def start_round(self):
-        # Reset players' hands for each round
-        self.phil.hand = []
-        self.mark.hand = []
-
-        # Initial hand to Phil and Mark
+        # fresh hands at start of round
+        self.bettor.reset_hand()
+        self.dummy.reset_hand()
+        
+        # initial cards are dealt
         for _ in range(2):
-            card_phil = self.dealer.deal()
-            card_mark = self.dealer.deal()
+            self.bettor.receive_card(self.manager.dealer.deal())
+            self.dummy.receive_card(self.manager.dealer.deal())
 
-            self.phil.receive_card(card_phil)
-            self.mark.receive_card(card_mark)
-
+    # this reveals the initial cards, for dummy, only one of his cards are shown to the bettor
     def reveal(self):
-        # Phil's cards
-        value = [item for card in self.phil.hand for item in card if isinstance(item, int)]
-        phil_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.phil.hand)
+        bettor_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.bettor.hand)
+        bettor_value = self.bettor.calculate_hand_value()
         print('------------------------------------------------')
-        print(f"{BLUE}Phil's cards{RESET}: {phil_cards} | {sum(value)}")
+        print(f"{BLUE}Bettor's cards{RESET}: {bettor_cards} | {bettor_value}")
 
-        # Mark's initially revealed card
-        value_mark = [item for card in self.mark.hand for item in card if isinstance(item, int)]
-        mark_first_card = self.mark.hand[0]
-        mark_initial_hand = f"{mark_first_card[0]} of {mark_first_card[2]}"
-        print(f"{RED}Mark's revealed card{RESET}: {mark_initial_hand} | {value_mark[0]}")
+        dummy_first_card = self.dummy.hand[0]
+        dummy_initial_hand = f"{dummy_first_card[0]} of {dummy_first_card[2]}" # only shows first card 
+        print(f"{RED}Dummy's revealed card{RESET}: {dummy_initial_hand} | {dummy_first_card[1]}")
         print('------------------------------------------------')
-    
-    def philsDecision(self):
-        def read():
-            # Mark's initially revealed card is read by Phil
-            mark_revealed_card = self.mark.hand[0][1]
-            # Phil also reads his current hand before making a decision
-            phil_hand = [item for card in self.phil.hand for item in card if isinstance(item, int)]
-            return mark_revealed_card, phil_hand
-
-        def hit():
-            # Deal a new card to Phil
-            new_card = self.dealer.deal()
-            self.phil.receive_card(new_card)
-            
-            # Format the new hand
-            new_hand = ', '.join(f"{card[0]} of {card[2]}" for card in self.phil.hand)
-            # Extract int values and calculate the total
-            value = [item for card in self.phil.hand for item in card if isinstance(item, int)]
-            total_value = sum(value)
-
-            # Print the new hand
-            print(f"{BLUE}Phil{RESET} chose to hit. New hand: {new_hand} | {total_value}")
-            
-            return total_value
-
-        def stand():
-            pass
-
-        phil = Phil(read, hit, stand)
-        phil.decision()
-
-    def markResponse(self):
-        def read():
-            phil_final_hand = [item for card in self.phil.hand for item in card if isinstance(item, int)]
-            return phil_final_hand
-
-        def response():
-            new_card = self.dealer.deal()
-            self.mark.receive_card(new_card)
-                
-            # Format new hand and extract int value
-            new_hand = ', '.join(f"{card[0]} of {card[2]}" for card in self.mark.hand)
-            value = [item for card in self.mark.hand for item in card if isinstance(item, int)]
-            total_value = sum(value)
-
-            # Print new hand
-            print(f"{RED}Mark's hand{RESET}: {new_hand} | {total_value}")
-            
-            return total_value
-
-        mark = Mark(read, response)
-        mark.response()
-
-
-    def check_game_over(self):
-        pass
 
     def game_loop(self):
         while True:
-            # start game
             self.reveal()
- 
-            # Phil's turn
-            self.philsDecision()
 
-            # Mark's turn
-            self.markResponse()
+            self.bettor.decision()
 
-            # Game over conditions
-            if self.check_game_over():
-                print("Game Over")
-                break
+            # now dummy responds after bettor stands
+            self.dummy.response()
+
+            if self.manager.check_game_over(self.bettor, self.dummy):
+                inp = input("Game Over: Play again? (y/n) ")
+                if inp == 'y':
+                    round = Round()
+                    round.start_round
+                else:
+                    break
 
 if __name__ == "__main__":
     round = Round()
     round.start_round()
-    round.reveal()
-    round.philsDecision()
-    round.markResponse()
+    round.game_loop()
