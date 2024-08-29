@@ -51,7 +51,6 @@ class Bettor:
             current_value = self.hit()
             print(f"{YELLOW}Bettor hits. New hand value: {current_value}{RESET}")
             if current_value > 21:
-                print(f"{BLUE}Bettor busts!{RESET}")
                 return
 
         # RULE # 2: Between 12 and 16
@@ -63,7 +62,6 @@ class Bettor:
                 print(f"{YELLOW}Bettor stands on the basis that the dealer is likely to bust.{RESET}")
                 return
             if current_value > 21:
-                print(f"{BLUE}Bettor busts!{RESET}")
                 return
 
         # RULE # 3: 17 or higher
@@ -79,7 +77,6 @@ class Bettor:
                     print(f"{YELLOW}Bettor stands on a soft {current_value}.{RESET}")
                     return
             if current_value > 21:
-                print(f"{BLUE}Bettor busts!{RESET}")
                 return
 
         # RULE # 4: Dealer has 10 or Ace
@@ -88,7 +85,6 @@ class Bettor:
                 current_value = self.hit()
                 print(f"{YELLOW}Bettor hits based on strong dealer hand. New hand value: {current_value}{RESET}")
                 if current_value > 21:
-                    print(f"{BLUE}Bettor busts!{RESET}")
                     return
             else:
                 print(f"{YELLOW}Bettor stands on {current_value}.{RESET}")

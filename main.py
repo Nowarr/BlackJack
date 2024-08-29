@@ -22,6 +22,7 @@ class Round:
         self.manager = GameManager()
         self.dummy = Dummy(self.manager)
         self.bettor = Bettor(self.manager, self.dummy)
+        self.is_running = True
 
     def start_round(self):
         # fresh hands at start of round
@@ -46,23 +47,25 @@ class Round:
         print('------------------------------------------------')
 
     def game_loop(self):
-        while True:
+        while self.is_running:
+            print("\n\n")
             self.reveal()
-
             self.bettor.decision()
-
-            # now dummy responds after bettor stands
             self.dummy.response()
 
             if self.manager.check_game_over(self.bettor, self.dummy):
-                inp = input("Game Over: Play again? (y/n) ")
-                if inp == 'y':
-                    round = Round()
-                    round.start_round
-                else:
-                    break
-
+                print("Game Over")
+                self.is_running = False
+                break
 if __name__ == "__main__":
-    round = Round()
-    round.start_round()
-    round.game_loop()
+    while True:
+        for _ in range (3):
+            round = Round()
+            round.start_round()
+            round.game_loop()
+
+        inp = input("\n\nSimulation over. Run again? (y/n)")
+        print(inp)
+        if inp != 'y':
+            break
+

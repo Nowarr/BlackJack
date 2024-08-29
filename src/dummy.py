@@ -19,7 +19,7 @@ class Dummy:
         return sum(value)
 
     def response(self):
-        while self.calculate_hand_value() < 17:
+        while self.calculate_hand_value() < 21:
             new_card = self.manager.dealer.deal()
             self.receive_card(new_card)
             new_value = self.calculate_hand_value()
@@ -28,4 +28,4 @@ class Dummy:
         if self.calculate_hand_value() > 21:
             print(f"{RED}Dummy busts.{RESET}")
         else:
-            print(f"{RED}Dummy ends up with {self.calculate_hand_value()}.{RESET}")
+            print(f"{RED}Dummy wins with {self.calculate_hand_value()}.{RESET}")
