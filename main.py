@@ -1,52 +1,64 @@
-from src.manager import GameManager
+"""BlackJack game - CLI implementation."""
+
+from typing import Tuple
+
 from src.bettor import Bettor
 from src.dummy import Dummy
+from src.manager import GameManager
 
 # ANSI escape sequences for colors
-RESET = "\033[0m"
-BLUE = "\033[34m"
-RED = "\033[31m"
+RESET: str = "\033[0m"
+BLUE: str = "\033[34m"
+RED: str = "\033[31m"
 
 
-'''
-General Structure:
-
-    - GameManager handles the game's state. Handles status of game, hand values, game results, etc. Cards are revealed upon the start of the round
-    - Bettor is our "main player" and makes decisions based on both his current hand value as well as a set of rules hard coded into his class
-    - Dummy simply provides a final response once the bettor makes his decisions.
-    - The game then finishes and asks the user to run a new round or not.
-
-'''
 class Round:
-    def __init__(self):
-        self.manager = GameManager()
-        self.dummy = Dummy(self.manager)
-        self.bettor = Bettor(self.manager, self.dummy)
-        self.is_running = True
+    """Represents a single round of BlackJack.
 
-    def start_round(self):
-        # fresh hands at start of round
+    Manages the game flow including dealing cards, player decisions,
+    and determining the winner.
+    """
+
+    def __init__(self) -> None:
+        """Initialize a new round with fresh game state."""
+        self.manager: GameManager = GameManager()
+        self.dummy: Dummy = Dummy(self.manager)
+        self.bettor: Bettor = Bettor(self.manager, self.dummy)
+        self.is_running: bool = True
+
+    def start_round(self) -> None:
+        """Start a new round by dealing initial cards."""
+        # Fresh hands at start of round
         self.bettor.reset_hand()
         self.dummy.reset_hand()
-        
-        # initial cards are dealt
+
+        # Initial cards are dealt
         for _ in range(2):
             self.bettor.receive_card(self.manager.dealer.deal())
             self.dummy.receive_card(self.manager.dealer.deal())
 
-    # this reveals the initial cards, for dummy, only one of his cards are shown to the bettor
-    def reveal(self):
-        bettor_cards = ', '.join(f"{card[0]} of {card[2]}" for card in self.bettor.hand)
+    def reveal(self) -> None:
+        """Display the initial cards for both players.
+
+        For the dummy (dealer), only one card is shown to the bettor.
+        """
+        bettor_cards = ", ".join(f"{card[0]} of {card[2]}" for card in self.bettor.hand)
         bettor_value = self.bettor.calculate_hand_value()
-        print('------------------------------------------------')
+        print("------------------------------------------------")
         print(f"{BLUE}Bettor's cards{RESET}: {bettor_cards} | {bettor_value}")
 
-        dummy_first_card = self.dummy.hand[0]
-        dummy_initial_hand = f"{dummy_first_card[0]} of {dummy_first_card[2]}" # only shows first card 
-        print(f"{RED}Dummy's revealed card{RESET}: {dummy_initial_hand} | {dummy_first_card[1]}")
-        print('------------------------------------------------')
+        dummy_first_card: Tuple[str, int, str] = self.dummy.hand[0]
+        dummy_initial_hand = (
+            f"{dummy_first_card[0]} of {dummy_first_card[2]}"  # Only show first card
+        )
+        print(
+            f"{RED}Dummy's revealed card{RESET}: "
+            f"{dummy_initial_hand} | {dummy_first_card[1]}"
+        )
+        print("------------------------------------------------")
 
-    def game_loop(self):
+    def game_loop(self) -> None:
+        """Execute the main game loop for a single round."""
         while self.is_running:
             print("\n\n")
             self.reveal()
@@ -57,15 +69,20 @@ class Round:
                 print("Game Over")
                 self.is_running = False
                 break
-if __name__ == "__main__":
-    while True:
-        for _ in range (3):
-            round = Round()
-            round.start_round()
-            round.game_loop()
 
-        inp = input("\n\nSimulation over. Run again? (y/n)")
-        print(inp)
-        if inp != 'y':
+
+def main() -> None:
+    """Run the main game loop."""
+    while True:
+        for _ in range(3):
+            round_instance = Round()
+            round_instance.start_round()
+            round_instance.game_loop()
+
+        inp = input("\n\nSimulation over. Run again? (y/n): ")
+        if inp.lower() != "y":
             break
 
+
+if __name__ == "__main__":
+    main()
