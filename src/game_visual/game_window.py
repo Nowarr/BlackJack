@@ -168,7 +168,12 @@ class BlackJackGame:
 
     def handle_stand(self) -> None:
         """Handle player standing (dealer's turn)."""
-        if not self.dummy or not self.bettor or not self.round_active or not self.manager:
+        if (
+            not self.dummy
+            or not self.bettor
+            or not self.round_active
+            or not self.manager
+        ):
             return
 
         # Dealer plays
